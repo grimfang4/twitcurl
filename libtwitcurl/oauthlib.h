@@ -54,7 +54,7 @@ public:
 
     bool extractOAuthTokenKeySecret( const std::string& requestTokenResponse /* in */ );
 
-    oAuth clone();
+    oAuth* clone();
 
 private:
 

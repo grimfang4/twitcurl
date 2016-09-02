@@ -42,17 +42,17 @@ oAuth::~oAuth()
 * @output: cloned oAuth object
 *
 *--*/
-oAuth oAuth::clone()
+oAuth* oAuth::clone()
 {
-    oAuth cloneObj;
-    cloneObj.m_consumerKey = m_consumerKey;
-    cloneObj.m_consumerSecret = m_consumerSecret;
-    cloneObj.m_oAuthTokenKey = m_oAuthTokenKey;
-    cloneObj.m_oAuthTokenSecret = m_oAuthTokenSecret;
-    cloneObj.m_oAuthPin = m_oAuthPin;
-    cloneObj.m_nonce = m_nonce;
-    cloneObj.m_timeStamp = m_timeStamp;
-    cloneObj.m_oAuthScreenName =  m_oAuthScreenName;
+    oAuth* cloneObj = new oAuth();
+    cloneObj->m_consumerKey = m_consumerKey;
+    cloneObj->m_consumerSecret = m_consumerSecret;
+    cloneObj->m_oAuthTokenKey = m_oAuthTokenKey;
+    cloneObj->m_oAuthTokenSecret = m_oAuthTokenSecret;
+    cloneObj->m_oAuthPin = m_oAuthPin;
+    cloneObj->m_nonce = m_nonce;
+    cloneObj->m_timeStamp = m_timeStamp;
+    cloneObj->m_oAuthScreenName =  m_oAuthScreenName;
     return cloneObj;
 }
 

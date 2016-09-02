@@ -5,8 +5,20 @@
 #include <sstream>
 #include <cstring>
 #include <vector>
-#include "oauthlib.h"
-#include "include/curl/curl.h"
+
+#if defined(TWITCURL_DLL) || defined(TWITCURL_DLL_EXPORT)
+	#ifdef TWITCURL_DLL_EXPORT
+	#define TWITCURL_EXPORT __declspec(dllexport)
+	#else
+	#define TWITCURL_EXPORT __declspec(dllimport)
+	#endif
+#else
+	#define TWITCURL_EXPORT
+#endif
+
+class oAuth;
+typedef void CURL;
+
 
 /* Few common types used by twitCurl */
 namespace twitCurlTypes
@@ -27,7 +39,7 @@ namespace twitCurlTypes
 };
 
 /* twitCurl class */
-class twitCurl
+class TWITCURL_EXPORT twitCurl
 {
 public:
     twitCurl();
@@ -38,6 +50,13 @@ public:
     bool oAuthRequestToken( std::string& authorizeUrl /* out */ );
     bool oAuthAccessToken();
     bool oAuthHandlePIN( const std::string& authorizeUrl /* in */ );
+    void setOAuthConsumerKey( const std::string& key );
+    void setOAuthConsumerSecret( const std::string& secret );
+    void setOAuthTokenKey( const std::string& key );
+    void setOAuthTokenSecret( const std::string& secret );
+    std::string getOAuthTokenKey();
+    std::string getOAuthTokenSecret();
+    void setOAuthPin(const std::string& PIN);
 
     /* Twitter login APIs, set once and forget */
     std::string& getTwitterUsername();
@@ -50,6 +69,7 @@ public:
 
     /* Twitter status APIs */
     bool statusUpdate( const std::string& newStatus /* in */, const std::string inReplyToStatusId = "" /* in */ );
+    bool statusUpdateWithImage( const char *data /* in */ , int size /* in */ , const std::string& newStatus /* in */ );
     bool statusShowById( const std::string& statusId /* in */ );
     bool statusDestroyById( const std::string& statusId /* in */ );
     bool retweetById( const std::string& statusId /* in */ );
@@ -175,7 +195,7 @@ private:
     twitCurlTypes::eTwitCurlProtocolType m_eProtocolType;
 
     /* OAuth data */
-    oAuth m_oAuth;
+    oAuth* m_oAuth;
 
     /* Private methods */
     void clearCurlCallbackBuffers();
