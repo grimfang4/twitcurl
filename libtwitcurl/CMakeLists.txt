@@ -11,15 +11,23 @@ include_directories (${PKGS_INCLUDE_DIRS})
 add_library(twitcurl SHARED ${twitSrcs})
 #add_library(twitcurl STATIC ${twitSrcs})
 
-find_library(CURL_LIBRARY curl HINTS ./lib ../lib PATHS ./lib ../lib )
-find_library(RTMP_LIBRARY rtmp HINTS ./lib)
-find_library(SSH2_LIBRARY ssh2 HINTS ./lib)
-find_library(LIBZ_LIBRARY libz HINTS ./lib)
-find_library(IDN_LIBRARY idn HINTS ./lib)
-find_library(SSL_LIBRARY ssl HINTS ./lib)
-find_library(CRYPTO_LIBRARY crypto HINTS ./lib)
+set(LIB_HINTS )
+set(LIB_PATHS ./lib ../lib)
 
-set(TWITCURL_DEPENDENCIES ${CURL_LIBRARY} ${RTMP_LIBRARY} ws2_32 wldap32 ${SSH2_LIBRARY} ${LIBZ_LIBRARY} ${IDN_LIBRARY} ${SSL_LIBRARY} ${CRYPTO_LIBRARY})
+find_library(CURL_LIBRARY curl HINTS ${LIB_HINTS} PATHS ${LIB_PATHS})
+find_library(RTMP_LIBRARY rtmp HINTS ${LIB_HINTS} PATHS ${LIB_PATHS})
+find_library(SSH2_LIBRARY ssh2 HINTS ${LIB_HINTS} PATHS ${LIB_PATHS})
+find_library(LIBZ_LIBRARY NAMES libz z HINTS ${LIB_HINTS} PATHS ${LIB_PATHS})
+find_library(IDN_LIBRARY idn HINTS ${LIB_HINTS} PATHS ${LIB_PATHS})
+find_library(SSL_LIBRARY ssl HINTS ${LIB_HINTS} PATHS ${LIB_PATHS})
+find_library(CRYPTO_LIBRARY crypto HINTS ${LIB_HINTS} PATHS ${LIB_PATHS})
+
+
+set(TWITCURL_DEPENDENCIES ${CURL_LIBRARY} ${RTMP_LIBRARY} ${SSH2_LIBRARY} ${LIBZ_LIBRARY} ${IDN_LIBRARY} ${SSL_LIBRARY} ${CRYPTO_LIBRARY})
+
+if(WIN32)
+    set(TWITCURL_DEPENDENCIES ${TWITCURL_DEPENDENCIES} ws2_32 wldap32)
+endif(WIN32)
 
 link_directories(./lib ../lib ../libtwitcurl/lib)
 target_link_libraries (twitcurl ${TWITCURL_DEPENDENCIES})
